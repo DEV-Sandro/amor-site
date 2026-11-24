@@ -106,6 +106,7 @@
     flex-shrink:0;
   }
   .selo:hover{transform:scale(1.05) rotate(-3deg);}
+  .selo:active,.selo.pressing{transform:scale(0.88) rotate(-2deg);box-shadow:0 6px 14px -8px rgba(214,151,149,0.6);transition:transform 0.1s ease-out, box-shadow 0.1s ease-out;}
   .selo.opened{transform:scale(0.001) rotate(180deg);pointer-events:none;}
   .selo-hint{font-family:var(--hand);font-size:1rem;color:var(--ink-soft);margin-top:10px;display:block;}
   .carta{
@@ -541,7 +542,7 @@
   <section class="video-section" id="cap-musica">
     <span class="eyebrow">interlúdio</span>
     <span class="chapter-num">Uma música, pra ela</span>
-    <p class="lede split-reveal">Tem coisa que só sei dizer cantando. Temos até uma música escrita por mim, pensando nela.</p>
+    <p class="lede split-reveal">Temos até uma música. E foi escrita por mim.</p>
     <div class="body-text"><p>A letra é minha, cada verso pensado nela — pedi só a voz emprestada, pra ela ganhar vida do jeito que merece. Com vídeo e tudo.</p></div>
     <div class="video-wrap">
       <video id="musicaVideo" controls preload="none" poster="assets/video/musica-poster.jpg" playsinline>
@@ -772,6 +773,18 @@
       <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-sandro-touca.jpg" alt="eu" loading="lazy"></div>
       <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-sandro-tranca.jpg" alt="eu" loading="lazy"></div>
       <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-sandro-bone.jpg" alt="eu" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-amanda-jantar.jpg" alt="ela" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-abraco2.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-beijo-flor.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-selfie-noite.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-beijo-testa.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-aconchego.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-anel.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-beijo2.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-carinho.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-mascara1.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-mascara2.jpg" alt="nós dois" loading="lazy"></div>
+      <div class="swiper-slide"><img class="g-photo" src="assets/photos/g-casal-festa-mascara.jpg" alt="nós dois" loading="lazy"></div>
       </div>
       <div class="swiper-pagination"></div>
       <div class="swiper-button-prev"></div>
@@ -980,6 +993,19 @@ function abrirCarta(){
     setTimeout(()=>b.classList.add('show'), 300 + i*550);
   });
 }
+
+/* feedback de "pressionado" no selo — o :active do CSS nem sempre dispara no toque do celular,
+   então reforça com pointer events pra garantir que sempre dê aquele feedback de apertar */
+(function(){
+  const seloEl = document.getElementById('selo');
+  if(!seloEl) return;
+  const apertar = ()=>seloEl.classList.add('pressing');
+  const soltar = ()=>seloEl.classList.remove('pressing');
+  seloEl.addEventListener('pointerdown', apertar);
+  seloEl.addEventListener('pointerup', soltar);
+  seloEl.addEventListener('pointerleave', soltar);
+  seloEl.addEventListener('pointercancel', soltar);
+})();
 
 /* beijo hearts */
 function soltarCoracoes(el){
