@@ -24,7 +24,8 @@
     --hand:'Caveat', cursive;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  /* sem scroll-behavior:smooth aqui de propósito: o Lenis já cuida do scroll
+     suave, e os dois juntos brigam entre si e deixam a rolagem travando */
   body{
     background:var(--bg);
     color:var(--ink);
@@ -199,6 +200,7 @@
   .crono-photos{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
   .crono-photos img{width:78px;height:78px;object-fit:cover;border-radius:8px;border:1px solid var(--line);box-shadow:0 6px 14px -8px rgba(46,42,38,0.3);cursor:pointer;transition:transform 0.25s ease;}
   .crono-photos img:hover{transform:scale(1.06);}
+  .certidao-img{display:block;margin-top:16px;width:240px;max-width:70vw;aspect-ratio:1/1;object-fit:contain;border-radius:10px;border:1px solid var(--line);box-shadow:0 14px 32px -16px rgba(46,42,38,0.35);background:var(--paper);}
 
   /* TIMELINE GERAL */
   .tl-geral{margin-top:50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
@@ -299,14 +301,18 @@
 <div id="progress"></div>
 <div class="monogram">S ✦ A</div>
 
+<audio id="trilha" loop preload="none">
+  <source src="assets/audio/trilha.mp3" type="audio/mpeg">
+</audio>
+
 <div class="music-widget">
   <div class="music-panel" id="musicPanel">
     <span class="music-caption">nossa trilha sonora</span>
     <span class="music-title">Se é bom, dura</span>
     <span class="music-artist">letra e ideia do Sandro, pra Amanda</span>
-    <a class="music-btn" href="#cap-musica" onclick="irParaMusica();return false;">▶ ouvir</a>
+    <a class="music-btn" href="#cap-musica" onclick="irParaMusica();return false;">▶ ver o clipe</a>
   </div>
-  <button id="music-toggle" aria-label="Ouvir nossa música">♪</button>
+  <button id="music-toggle" aria-label="Tocar ou pausar nossa música">♪</button>
 </div>
 
 <main>
@@ -316,7 +322,7 @@
     <span class="eyebrow">uma história real</span>
     <h1>Algumas histórias<br>levam quinze anos para começar.</h1>
     <div class="names">Sandro <span>&</span> Amanda <i class="crown">♛</i></div>
-    <button onclick="irPara('cap1')">Conheça nossa história</button>
+    <button onclick="irPara('cap1');tocarTrilha();">Conheça nossa história</button>
     <div class="cue"><span>role a tela</span><div class="line"></div></div>
   </section>
 
@@ -651,9 +657,7 @@
         <span class="c-date">23 de novembro</span>
         <h4>Hoje — e um "certificado" de quebra</h4>
         <p>O dia em que essa página ganhou mais um capítulo. E, nessa mesma semana, ela me mandou um certificado: 5 meses de namoro, sendo 1 mês desde que virou oficial. Bem a nossa cara — ela contando certinho, eu sendo o atrasado da história.</p>
-        <div class="crono-photos">
-          <img src="assets/photos/certificado-namoro.jpg" alt="certificado de namoro" loading="lazy">
-        </div>
+        <img src="assets/photos/certificado-namoro.jpg" alt="certificado de namoro feito pela Amanda" class="certidao-img" loading="lazy">
       </div>
       </div>
     </div>
@@ -792,6 +796,17 @@ function irPara(id){
   else el.scrollIntoView({behavior:'smooth'});
 }
 
+/* trilha sonora de fundo (toca a partir do clique em "Conheça nossa historia") */
+const trilha = document.getElementById('trilha');
+function tocarTrilha(){
+  if(!trilha) return;
+  trilha.volume = 0.45;
+  trilha.play().catch(()=>{});
+}
+function pausarTrilha(){
+  if(trilha) trilha.pause();
+}
+
 /* botao de musica flutuante leva direto pro video da nossa musica e ja toca */
 function irParaMusica(){
   irPara('cap-musica');
@@ -800,6 +815,21 @@ function irParaMusica(){
   const panel = document.getElementById('musicPanel');
   if(panel) panel.classList.remove('open');
 }
+
+/* evita tocar a trilha de fundo e o video ao mesmo tempo */
+(function(){
+  const video = document.getElementById('musicaVideo');
+  if(!video || !trilha) return;
+  let pausadaPeloVideo = false;
+  video.addEventListener('play', ()=>{
+    if(!trilha.paused){ pausarTrilha(); pausadaPeloVideo = true; }
+  });
+  const retomarTrilha = ()=>{
+    if(pausadaPeloVideo){ tocarTrilha(); pausadaPeloVideo = false; }
+  };
+  video.addEventListener('pause', retomarTrilha);
+  video.addEventListener('ended', retomarTrilha);
+})();
 
 /* galeria em carrossel (Swiper) */
 try{
@@ -965,6 +995,9 @@ const musicPanel = document.getElementById('musicPanel');
 if(musicBtn && musicPanel){
   musicBtn.addEventListener('click',()=>{
     musicPanel.classList.toggle('open');
+    if(trilha){
+      if(trilha.paused) tocarTrilha(); else pausarTrilha();
+    }
   });
 }
 
@@ -1015,25 +1048,32 @@ if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
     gsap.to('.hero button',{opacity:1,duration:1,delay:0.75});
     gsap.to('.hero .cue',{opacity:1,duration:1,delay:1});
 
-    gsap.utils.toArray('.body-text p, .card, .rota, .estrada, .crono-item, .tl-card, .g-slot, .selo, .declaracao-wrap, .pedido-wrap, .video-wrap, .g-photo').forEach(el=>{
-      gsap.fromTo(el,{opacity:0,y:16},{opacity:1,y:0,duration:0.7,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%'}});
+    /* um único ScrollTrigger "em lote" pra tudo isso, bem mais leve que uma
+       instância por elemento (eram ~80 triggers individuais antes, causando
+       a travada no scroll) */
+    ScrollTrigger.batch('.body-text p, .card, .rota, .estrada, .crono-item, .tl-card, .selo, .declaracao-wrap, .pedido-wrap, .video-wrap, .g-photo', {
+      start:'top 90%',
+      once:true,
+      onEnter: batch => gsap.fromTo(batch,{opacity:0,y:16},{opacity:1,y:0,duration:0.7,ease:'power2.out',stagger:0.06})
     });
 
     gsap.fromTo('#footer-sign',{opacity:0,y:10},{opacity:1,y:0,duration:1,delay:0.4,scrollTrigger:{trigger:'.final',start:'top 70%'}});
 
-    /* parallax sutil nas fotos de destaque */
-    document.querySelectorAll('.pedido-photo, .beijo-photo').forEach(el=>{
-      if(!el.style.backgroundImage) return;
-      el.style.backgroundPosition = '50% 30%';
-      gsap.to(el,{backgroundPositionY:'70%',ease:'none',
-        scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:0.6}});
-    });
+    /* parallax e van: só em telas maiores — são animações "scrub" (recalculam
+       a cada frame de scroll) e em celular isso pesava e travava a rolagem */
+    if(window.matchMedia('(min-width:721px)').matches){
+      document.querySelectorAll('.pedido-photo, .beijo-photo').forEach(el=>{
+        if(!el.style.backgroundImage) return;
+        el.style.backgroundPosition = '50% 30%';
+        gsap.to(el,{backgroundPositionY:'70%',ease:'none',
+          scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:0.6}});
+      });
 
-    /* van moving along road */
-    gsap.to('#van',{
-      x:560, ease:'none',
-      scrollTrigger:{trigger:'.estrada', start:'top 80%', end:'bottom 40%', scrub:1}
-    });
+      gsap.to('#van',{
+        x:560, ease:'none',
+        scrollTrigger:{trigger:'.estrada', start:'top 80%', end:'bottom 40%', scrub:1}
+      });
+    }
 
     /* recalcula os pontos de disparo depois que tudo (fotos, video) carregar */
     window.addEventListener('load', ()=>{ try{ ScrollTrigger.refresh(); }catch(e){} });
