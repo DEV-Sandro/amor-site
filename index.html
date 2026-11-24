@@ -302,9 +302,9 @@
 <div class="music-widget">
   <div class="music-panel" id="musicPanel">
     <span class="music-caption">nossa trilha sonora</span>
-    <span class="music-title">Tem Que Ser Você</span>
-    <span class="music-artist">Victor & Leo</span>
-    <a class="music-btn" href="https://music.youtube.com/watch?v=5r6eYmMru2k" target="_blank" rel="noopener">▶ ouvir</a>
+    <span class="music-title">Se é bom, dura</span>
+    <span class="music-artist">letra e ideia do Sandro, pra Amanda</span>
+    <a class="music-btn" href="#cap-musica" onclick="irParaMusica();return false;">▶ ouvir</a>
   </div>
   <button id="music-toggle" aria-label="Ouvir nossa música">♪</button>
 </div>
@@ -466,9 +466,11 @@
     <span class="chapter-num">IX. O pedido de namoro</span>
     <p class="lede">Namorar de fato, sem cerimônia, já tínhamos começado em junho. Mas eu queria fazer direito — queria <em>pedir</em>.</p>
     <div class="body-text">
-      <p>Tentei antes, mais de uma vez. Marquei pra 12 de outubro, num chalé — não deu certo. Tentei ainda em setembro — também não deu. Pra não ficar adiando pra sempre, resolvi parar de esperar o momento perfeito.</p>
+      <p>A aliança já tinha virado novela: comprei uma em julho, veio errada, tive que devolver e pedir outra. Isso sozinho já atrasou tudo.</p>
+      <p>Tentei em setembro, numa trilha em Santarém — tinha combinado o cenário com um rapaz de lá, e ele simplesmente sumiu no dia. Tentei de novo, mesmo mês, e nem consegui viajar. Nova tentativa marcada pra 12 de outubro, Dia das Crianças, feriado — o plano era Santarém; não deu, e tentei improvisar aqui mesmo, no parque estadual da cidade. Também não deu.</p>
+      <p>Cada tentativa caía por um motivo diferente — meu, dela, do lugar — enquanto o tempo passava e ela cobrava aquela aliança, sem fazer ideia de nenhuma dessas tentativas frustradas. Na cabeça dela, talvez aquilo nunca fosse vir de verdade.</p>
       <p>A ideia era um telhado bonito, pôr do sol e tudo. Mas, pra variar, cheguei atrasado — e quando finalmente rolou já estava escuro. Sem cartão-postal, sem foto, sem vídeo. Só eu, ela, e a pergunta inteira, dessa vez sem medo da resposta. Coloquei um anel na mão dela. Ela colocou outro na minha vida.</p>
-      <p class="soft">Não foi o pedido mais bonito do mundo — foi mais pra oficializar mesmo, sem enrolar mais. Ela merece um refeito, com calma e com luz. Quem sabe a gente não repete essa cena por aí, talvez já evoluindo pra algo além? Fica a brincadeira no ar.</p>
+      <p class="soft">Não foi o pedido mais bonito do mundo — foi mais pra oficializar mesmo, depois de tanta tentativa que não vingou. Ela merece um refeito, com calma e com luz. Quem sabe a gente não repete essa cena por aí, talvez já evoluindo pra algo além? Fica a brincadeira no ar.</p>
     </div>
     <div class="pedido-wrap">
       <div class="pedido-photo" onclick="soltarBrilho(this)" style="background-image:url('assets/photos/pedido-namoro.jpg');">
@@ -482,13 +484,13 @@
   </section>
 
   <!-- INTERLÚDIO: VÍDEO -->
-  <section class="video-section">
+  <section class="video-section" id="cap-musica">
     <span class="eyebrow">interlúdio</span>
     <span class="chapter-num">Uma música, pra ela</span>
-    <p class="lede split-reveal">Tem coisa que eu só sei dizer cantando — mesmo quando a voz não é a minha.</p>
-    <div class="body-text"><p>A letra é minha, cada verso pensado nela. O estilo e a ideia também — só pedi pra uma voz melhor que a minha dar vida a isso. Com vídeo e tudo, do jeito que ela merece.</p></div>
+    <p class="lede split-reveal">Tem coisa que só sei dizer cantando. Temos até uma música escrita por mim, pensando nela.</p>
+    <div class="body-text"><p>A letra é minha, cada verso pensado nela — pedi só a voz emprestada, pra ela ganhar vida do jeito que merece. Com vídeo e tudo.</p></div>
     <div class="video-wrap">
-      <video controls preload="none" poster="assets/video/musica-poster.jpg" playsinline>
+      <video id="musicaVideo" controls preload="none" poster="assets/video/musica-poster.jpg" playsinline>
         <source src="assets/video/musica-video.mp4" type="video/mp4">
         Seu navegador não suporta vídeo.
       </video>
@@ -621,13 +623,16 @@
         <p>Debaixo de um telhado, duas mãos, dois anéis. Dessa vez eu pedi — e a resposta foi exatamente a que eu esperava.</p>
         <div class="crono-photos">
           <img src="assets/photos/pedido-namoro.jpg" alt="pedido de namoro" loading="lazy">
-          <img src="assets/photos/certificado-namoro.jpg" alt="certificado" loading="lazy">
         </div>
       </div>
       <div class="crono-item highlight">
         <span class="c-date">23 de novembro</span>
-        <h4>Hoje</h4>
-        <p>O dia em que essa página ganhou mais um capítulo. E vai ganhar outros — porque essa história continua.</p>
+        <h4>Hoje — e um "certificado" de quebra</h4>
+        <p>O dia em que essa página ganhou mais um capítulo. E, nessa mesma semana, ela me mandou um certificado: 5 meses de namoro, sendo 1 mês desde que virou oficial. Bem a nossa cara — ela contando certinho, eu sendo o atrasado da história.</p>
+        <div class="crono-photos">
+          <img src="assets/photos/certificado-namoro.jpg" alt="certificado de namoro" loading="lazy">
+        </div>
+      </div>
       </div>
     </div>
   </section>
@@ -740,16 +745,23 @@
 <script src="assets/vendor/confetti.browser.js"></script>
 <script src="assets/vendor/swiper-bundle.min.js"></script>
 <script>
-gsap.registerPlugin(ScrollTrigger);
+/* ---------- recursos essenciais: sempre funcionam, mesmo se alguma lib externa falhar ---------- */
 
-/* scroll suave (Lenis) integrado ao GSAP */
+/* scroll suave (Lenis), com fallback pro proprio requestAnimationFrame se o GSAP nao carregar */
 let lenis;
 try{
-  lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((time)=>{ lenis.raf(time*1000); });
-  gsap.ticker.lagSmoothing(0);
-}catch(e){ /* segue sem scroll suave se a lib não carregar */ }
+  if(typeof Lenis !== 'undefined'){
+    lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    if(typeof gsap !== 'undefined'){
+      lenis.on('scroll', ()=>{ if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.update(); });
+      gsap.ticker.add((time)=>{ lenis.raf(time*1000); });
+      gsap.ticker.lagSmoothing(0);
+    }else{
+      const rafLoop = (time)=>{ lenis.raf(time); requestAnimationFrame(rafLoop); };
+      requestAnimationFrame(rafLoop);
+    }
+  }
+}catch(e){ /* segue com scroll nativo se a lib nao carregar */ }
 
 function irPara(id){
   const el = document.getElementById(id);
@@ -758,142 +770,107 @@ function irPara(id){
   else el.scrollIntoView({behavior:'smooth'});
 }
 
+/* botao de musica flutuante leva direto pro video da nossa musica e ja toca */
+function irParaMusica(){
+  irPara('cap-musica');
+  const video = document.getElementById('musicaVideo');
+  if(video){ video.play().catch(()=>{}); }
+  const panel = document.getElementById('musicPanel');
+  if(panel) panel.classList.remove('open');
+}
+
 /* galeria em carrossel (Swiper) */
 try{
-  new Swiper('.galeria-swiper',{
-    slidesPerView:'auto',
-    centeredSlides:true,
-    spaceBetween:18,
-    loop:true,
-    grabCursor:true,
-    pagination:{ el:'.galeria-swiper .swiper-pagination', clickable:true },
-    navigation:{ nextEl:'.galeria-swiper .swiper-button-next', prevEl:'.galeria-swiper .swiper-button-prev' }
-  });
+  if(typeof Swiper !== 'undefined'){
+    new Swiper('.galeria-swiper',{
+      slidesPerView:'auto',
+      centeredSlides:true,
+      spaceBetween:18,
+      loop:true,
+      grabCursor:true,
+      pagination:{ el:'.galeria-swiper .swiper-pagination', clickable:true },
+      navigation:{ nextEl:'.galeria-swiper .swiper-button-next', prevEl:'.galeria-swiper .swiper-button-prev' }
+    });
+  }
 }catch(e){}
 
-/* efeito cinematográfico: texto letra por letra */
-function splitChars(el){
-  const text = el.textContent;
-  el.textContent = '';
-  const frag = document.createDocumentFragment();
-  [...text].forEach(ch=>{
-    if(ch === ' '){
-      frag.appendChild(document.createTextNode(' '));
-      return;
-    }
-    const span = document.createElement('span');
-    span.textContent = ch;
-    span.style.display = 'inline-block';
-    span.style.opacity = '0';
-    span.style.transform = 'translateY(0.5em)';
-    frag.appendChild(span);
-  });
-  el.appendChild(frag);
-  return el.querySelectorAll('span');
-}
-document.querySelectorAll('.split-reveal').forEach(el=>{
-  const chars = splitChars(el);
-  gsap.to(chars,{opacity:1,y:0,duration:0.5,ease:'power2.out',stagger:0.018,
-    scrollTrigger:{trigger:el,start:'top 82%'}});
-});
-
-/* confete em forma de coração para os grandes momentos */
+/* confete em forma de coracao para os grandes momentos */
 function chuvaDeCoracoes(originEl){
   if(typeof confetti !== 'function') return;
-  const rect = originEl.getBoundingClientRect();
-  const origin = { x:(rect.left+rect.width/2)/window.innerWidth, y:(rect.top+rect.height/2)/window.innerHeight };
-  const heart = confetti.shapeFromText ? confetti.shapeFromText({text:'❤️', scalar:2.4}) : undefined;
-  confetti({
-    particleCount: 40,
-    spread: 70,
-    startVelocity: 28,
-    gravity: 0.7,
-    scalar: 1.1,
-    colors: ['#E7BBB9','#D69795','#B89A5C'],
-    shapes: heart ? [heart] : ['circle'],
-    origin
-  });
+  try{
+    const rect = originEl.getBoundingClientRect();
+    const origin = { x:(rect.left+rect.width/2)/window.innerWidth, y:(rect.top+rect.height/2)/window.innerHeight };
+    const heart = confetti.shapeFromText ? confetti.shapeFromText({text:'❤️', scalar:2.4}) : undefined;
+    confetti({
+      particleCount: 40,
+      spread: 70,
+      startVelocity: 28,
+      gravity: 0.7,
+      scalar: 1.1,
+      colors: ['#E7BBB9','#D69795','#B89A5C'],
+      shapes: heart ? [heart] : ['circle'],
+      origin
+    });
+  }catch(e){}
 }
 
 /* dust particles */
-const canvas = document.getElementById('dust');
-const ctx = canvas.getContext('2d');
-let dust = [];
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;initDust();}
-function initDust(){
-  dust=[];
-  const count = Math.floor((canvas.width*canvas.height)/26000);
-  for(let i=0;i<count;i++){
-    dust.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.4+0.4,
-      speed:Math.random()*0.15+0.03, phase:Math.random()*Math.PI*2, alpha:Math.random()*0.35+0.1});
+try{
+  const canvas = document.getElementById('dust');
+  const ctx = canvas.getContext('2d');
+  let dust = [];
+  var resize = function(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;initDust();};
+  function initDust(){
+    dust=[];
+    const count = Math.floor((canvas.width*canvas.height)/26000);
+    for(let i=0;i<count;i++){
+      dust.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.4+0.4,
+        speed:Math.random()*0.15+0.03, phase:Math.random()*Math.PI*2, alpha:Math.random()*0.35+0.1});
+    }
   }
-}
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  const t=Date.now()*0.001;
-  dust.forEach(d=>{
-    d.y -= d.speed;
-    if(d.y < -5) d.y = canvas.height+5;
-    const a = d.alpha + Math.sin(t+d.phase)*0.08;
-    ctx.beginPath();
-    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-    ctx.fillStyle = `rgba(184,154,92,${Math.max(0,a)})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(draw);
-}
-window.addEventListener('resize',resize);
-resize();draw();
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const t=Date.now()*0.001;
+    dust.forEach(d=>{
+      d.y -= d.speed;
+      if(d.y < -5) d.y = canvas.height+5;
+      const a = d.alpha + Math.sin(t+d.phase)*0.08;
+      ctx.beginPath();
+      ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(184,154,92,${Math.max(0,a)})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);
+  resize();draw();
+}catch(e){}
 
 /* scroll progress */
 function updateProgress(){
   const h = document.body.scrollHeight - window.innerHeight;
   const p = h>0 ? (window.scrollY/h)*100 : 0;
-  document.getElementById('progress').style.width = p+'%';
+  const bar = document.getElementById('progress');
+  if(bar) bar.style.width = p+'%';
 }
 window.addEventListener('scroll', updateProgress);
 updateProgress();
 
-/* reveals */
-gsap.utils.toArray('.eyebrow').forEach(el=>{
-  gsap.to(el,{opacity:1,y:0,duration:0.8,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 88%'}});
-});
-gsap.to('.hero h1',{opacity:1,y:0,duration:1.1,ease:'power3.out',delay:0.15});
-gsap.to('.hero .names',{opacity:1,y:0,duration:1,ease:'power3.out',delay:0.45});
-gsap.to('.hero button',{opacity:1,duration:1,delay:0.75});
-gsap.to('.hero .cue',{opacity:1,duration:1,delay:1});
-
-gsap.utils.toArray('.body-text p, .card, .rota, .estrada, .crono-item, .tl-card, .g-slot, .selo, .declaracao-wrap, .pedido-wrap, .video-wrap, .g-photo').forEach(el=>{
-  gsap.fromTo(el,{opacity:0,y:16},{opacity:1,y:0,duration:0.7,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%'}});
-});
-
-gsap.fromTo('#footer-sign',{opacity:0,y:10},{opacity:1,y:0,duration:1,delay:0.4,scrollTrigger:{trigger:'.final',start:'top 70%'}});
-
-/* confusao staggered */
-const confusaoObs = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      const spans = entry.target.querySelectorAll('span');
-      spans.forEach((s,i)=>setTimeout(()=>s.classList.add('show'), i*450));
-      confusaoObs.unobserve(entry.target);
-    }
-  });
-},{threshold:0.5});
-confusaoObs.observe(document.getElementById('confusao'));
-
-/* parallax sutil nas fotos de destaque */
-document.querySelectorAll('.pedido-photo, .beijo-photo').forEach(el=>{
-  if(!el.style.backgroundImage) return;
-  el.style.backgroundPosition = '50% 30%';
-  gsap.to(el,{backgroundPositionY:'70%',ease:'none',
-    scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:0.6}});
-});
-
-/* van moving along road */
-gsap.to('#van',{
-  x:560, ease:'none',
-  scrollTrigger:{trigger:'.estrada', start:'top 80%', end:'bottom 40%', scrub:1}
-});
+/* confusao staggered - nao depende de nenhuma lib externa */
+(function(){
+  const confusaoEl = document.getElementById('confusao');
+  if(!confusaoEl) return;
+  const confusaoObs = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const spans = entry.target.querySelectorAll('span');
+        spans.forEach((s,i)=>setTimeout(()=>s.classList.add('show'), i*450));
+        confusaoObs.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.5});
+  confusaoObs.observe(confusaoEl);
+})();
 
 /* carta / selo */
 function abrirCarta(){
@@ -940,7 +917,7 @@ function soltarBrilho(el){
 let heartTotal = 0;
 function mandarCoracao(){
   heartTotal++;
-  document.getElementById('heartCount').textContent = heartTotal===1 ? '1 coração enviado' : heartTotal+' corações enviados';
+  document.getElementById('heartCount').textContent = heartTotal===1 ? '1 coracao enviado' : heartTotal+' coracoes enviados';
   const btn = document.getElementById('heartBtn');
   for(let i=0;i<4;i++){
     const h = document.createElement('span');
@@ -960,12 +937,91 @@ document.querySelectorAll('.card').forEach(card=>{
   card.addEventListener('click',()=>card.classList.toggle('flipped'));
 });
 
-/* nossa música */
+/* nossa musica */
 const musicBtn = document.getElementById('music-toggle');
 const musicPanel = document.getElementById('musicPanel');
-musicBtn.addEventListener('click',()=>{
-  musicPanel.classList.toggle('open');
-});
+if(musicBtn && musicPanel){
+  musicBtn.addEventListener('click',()=>{
+    musicPanel.classList.toggle('open');
+  });
+}
+
+/* ---------- animacoes GSAP: efeito visual extra - se alguma lib falhar, o site continua inteiro e visivel ---------- */
+function revealSemGsap(){
+  document.querySelectorAll('.eyebrow, .hero h1, .hero .names, .hero button, .hero .cue, #footer-sign').forEach(el=>{
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
+}
+
+if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
+  try{
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* efeito cinematografico: texto letra por letra */
+    function splitChars(el){
+      const text = el.textContent;
+      el.textContent = '';
+      const frag = document.createDocumentFragment();
+      [...text].forEach(ch=>{
+        if(ch === ' '){
+          frag.appendChild(document.createTextNode(' '));
+          return;
+        }
+        const span = document.createElement('span');
+        span.textContent = ch;
+        span.style.display = 'inline-block';
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(0.5em)';
+        frag.appendChild(span);
+      });
+      el.appendChild(frag);
+      return el.querySelectorAll('span');
+    }
+    document.querySelectorAll('.split-reveal').forEach(el=>{
+      const chars = splitChars(el);
+      gsap.to(chars,{opacity:1,y:0,duration:0.5,ease:'power2.out',stagger:0.018,
+        scrollTrigger:{trigger:el,start:'top 82%'}});
+    });
+
+    /* reveals */
+    gsap.utils.toArray('.eyebrow').forEach(el=>{
+      gsap.to(el,{opacity:1,y:0,duration:0.8,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+    });
+    gsap.to('.hero h1',{opacity:1,y:0,duration:1.1,ease:'power3.out',delay:0.15});
+    gsap.to('.hero .names',{opacity:1,y:0,duration:1,ease:'power3.out',delay:0.45});
+    gsap.to('.hero button',{opacity:1,duration:1,delay:0.75});
+    gsap.to('.hero .cue',{opacity:1,duration:1,delay:1});
+
+    gsap.utils.toArray('.body-text p, .card, .rota, .estrada, .crono-item, .tl-card, .g-slot, .selo, .declaracao-wrap, .pedido-wrap, .video-wrap, .g-photo').forEach(el=>{
+      gsap.fromTo(el,{opacity:0,y:16},{opacity:1,y:0,duration:0.7,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%'}});
+    });
+
+    gsap.fromTo('#footer-sign',{opacity:0,y:10},{opacity:1,y:0,duration:1,delay:0.4,scrollTrigger:{trigger:'.final',start:'top 70%'}});
+
+    /* parallax sutil nas fotos de destaque */
+    document.querySelectorAll('.pedido-photo, .beijo-photo').forEach(el=>{
+      if(!el.style.backgroundImage) return;
+      el.style.backgroundPosition = '50% 30%';
+      gsap.to(el,{backgroundPositionY:'70%',ease:'none',
+        scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:0.6}});
+    });
+
+    /* van moving along road */
+    gsap.to('#van',{
+      x:560, ease:'none',
+      scrollTrigger:{trigger:'.estrada', start:'top 80%', end:'bottom 40%', scrub:1}
+    });
+
+    /* recalcula os pontos de disparo depois que tudo (fotos, video) carregar */
+    window.addEventListener('load', ()=>{ try{ ScrollTrigger.refresh(); }catch(e){} });
+  }catch(e){
+    console.error('Animacoes GSAP falharam - revelando o conteudo sem elas:', e);
+    revealSemGsap();
+  }
+}else{
+  revealSemGsap();
+}
 </script>
 </body>
 </html>
