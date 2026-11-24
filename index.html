@@ -283,6 +283,31 @@
   }
   .music-panel .music-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
 
+  .music-hint{
+    position:absolute;bottom:56px;right:0;
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    padding:9px 16px;font-family:var(--body);font-size:0.76rem;color:var(--ink-soft);
+    white-space:nowrap;box-shadow:0 14px 30px -16px rgba(46,42,38,0.3);
+    opacity:0;transform:translateY(6px);pointer-events:none;
+    transition:opacity 0.4s ease, transform 0.4s ease;
+  }
+  .music-hint.show{opacity:1;transform:translateY(0);}
+
+  /* CTA ATTENTION PULSE — anel suave chamando pro clique */
+  .cta-pulse{position:relative;}
+  .cta-pulse::after{
+    content:'';position:absolute;inset:-6px;border-radius:inherit;
+    border:1.5px solid var(--gold);opacity:0;pointer-events:none;
+    animation:ctaPulse 2.6s ease-out infinite;
+  }
+  .selo.cta-pulse::after{border-color:#fff;}
+  .selo.opened.cta-pulse::after{animation:none;opacity:0;}
+  @keyframes ctaPulse{
+    0%{transform:scale(1);opacity:0.6;}
+    70%{transform:scale(1.2);opacity:0;}
+    100%{transform:scale(1.2);opacity:0;}
+  }
+
   @media (max-width:720px){
     section{padding:90px 7vw;}
     .cards{grid-template-columns:1fr;}
@@ -291,7 +316,7 @@
     .crono-track{padding-left:24px;}
     .crono-item::before{left:-30px;}
   }
-  @media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
 </style>
 </head>
 <body>
@@ -312,6 +337,7 @@
     <span class="music-artist">letra e ideia do Sandro, pra Amanda</span>
     <a class="music-btn" href="#cap-musica" onclick="irParaMusica();return false;">▶ ver o clipe</a>
   </div>
+  <span class="music-hint" id="musicHint">tocando agora ♪ — toque pra pausar</span>
   <button id="music-toggle" aria-label="Tocar ou pausar nossa música">♪</button>
 </div>
 
@@ -322,7 +348,7 @@
     <span class="eyebrow">uma história real</span>
     <h1>Algumas histórias<br>levam quinze anos para começar.</h1>
     <div class="names">Sandro <span>&</span> Amanda <i class="crown">♛</i></div>
-    <button onclick="irPara('cap1');tocarTrilha();">Conheça nossa história</button>
+    <button class="cta-pulse" onclick="irPara('cap1');tocarTrilha();">Conheça nossa história</button>
     <div class="cue"><span>role a tela</span><div class="line"></div></div>
   </section>
 
@@ -350,7 +376,7 @@
     <p class="lede">Na sexta série, finalmente tomei coragem. Mas não pessoalmente.</p>
     <div class="declaracao-wrap">
       <div>
-        <div class="selo" id="selo" onclick="abrirCarta()">S+A</div>
+        <div class="selo cta-pulse" id="selo" onclick="abrirCarta()">S+A</div>
         <span class="selo-hint">toque no selo</span>
       </div>
       <div class="carta" id="carta">
@@ -758,7 +784,7 @@
     <span class="eyebrow">este capítulo termina aqui</span>
     <blockquote id="final-quote" class="split-reveal">"Algumas histórias não começam quando duas pessoas se conhecem. Elas começam quando a vida finalmente permite que elas aconteçam."</blockquote>
     <p class="continua-line" style="margin-top:28px;font-family:var(--display);font-size:1.2rem;">To be continued<span class="continua-cursor"></span></p>
-    <button class="heart-btn" id="heartBtn" onclick="mandarCoracao()">❤</button>
+    <button class="heart-btn cta-pulse" id="heartBtn" onclick="mandarCoracao()">❤</button>
     <div class="heart-count" id="heartCount">toque quantas vezes quiser</div>
     <div class="footer-sign" id="footer-sign">Com todo o carinho, pra minha princesa Amanda — Sandro ❤️</div>
   </section>
@@ -830,6 +856,26 @@ function irParaMusica(){
   video.addEventListener('pause', retomarTrilha);
   video.addEventListener('ended', retomarTrilha);
 })();
+
+/* deixa claro que dá pra pausar: troca o ícone e mostra uma dica na primeira vez que toca */
+function mostrarDicaMusica(){
+  const hint = document.getElementById('musicHint');
+  if(!hint || hint.dataset.ja) return;
+  hint.dataset.ja = '1';
+  hint.classList.add('show');
+  setTimeout(()=>hint.classList.remove('show'), 4800);
+}
+if(trilha){
+  trilha.addEventListener('play', ()=>{
+    const btn = document.getElementById('music-toggle');
+    if(btn){ btn.textContent = '❚❚'; btn.setAttribute('aria-label','Pausar nossa música'); }
+    mostrarDicaMusica();
+  });
+  trilha.addEventListener('pause', ()=>{
+    const btn = document.getElementById('music-toggle');
+    if(btn){ btn.textContent = '♪'; btn.setAttribute('aria-label','Tocar nossa música'); }
+  });
+}
 
 /* galeria em carrossel (Swiper) */
 try{
