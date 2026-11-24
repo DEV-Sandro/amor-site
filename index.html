@@ -30,11 +30,13 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   /* sem scroll-behavior:smooth aqui de propósito: o Lenis já cuida do scroll
      suave, e os dois juntos brigam entre si e deixam a rolagem travando */
+  html{overflow-x:hidden;width:100%;}
   body{
     background:var(--bg);
     color:var(--ink);
     font-family:var(--body);
     overflow-x:hidden;
+    width:100%;
     line-height:1.7;
   }
   ::selection{background:var(--gold-soft);color:var(--ink);}
